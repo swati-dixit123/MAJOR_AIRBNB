@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>WanderLust</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  margin:0;
+  font-family:'Poppins', sans-serif;
+
+  /* SINGLE DESTINATION BACKGROUND */
+  background:
+    linear-gradient(
+      rgba(0,0,0,0.65),
+      rgba(0,0,0,0.65)
+    ),
+    url("https://images.unsplash.com/photo-1501785888041-af3ef285b470");
+
+  background-size:cover;
+  background-position:center;
+  background-attachment:fixed;
+
+  color:white;
+  overflow-x:hidden;
+
+}
+/* NAVBAR */
+nav{
+  position:fixed;
+  top:20px;
+  left:50%;
+  transform:translateX(-50%);
+  width:85%;
+  padding:18px 40px;
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(15px);
+  border-radius:40px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  z-index:100;
+}
+
+nav ul{
+  list-style:none;
+  display:flex;
+  gap:30px;
+}
+
+nav ul li a{
+  color:white;
+  text-decoration:none;
+  font-size:15px;
+  opacity:0.9;
+}
+
+/* HERO */
+section{
+  min-height:100vh;
+  padding:120px 8%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.hero-text{
+  max-width:500px;
+}
+
+.hero-text h1{
+  font-size:56px;
+  line-height:1.2;
+  margin-bottom:20px;
+}
+
+.hero-text p{
+  font-size:18px;
+  opacity:0.9;
+  margin-bottom:35px;
+}
+
+.hero-text button{
+  padding:15px 40px;
+  border:none;
+  border-radius:30px;
+  background:#ffb703;
+  font-size:16px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.hero-text button:hover{
+  background:#ffa200;
+  transform:scale(1.05);
+}
+
+/* IMAGE */
+.hero-img img{
+  width:450px;
+  animation: float 4s infinite ease-in-out;
+}
+
+@keyframes float{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-25px);}
+}
+
+/* ABOUT */
+.about{
+  min-height:100vh;
+  padding:120px 8%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.about-glass{
+  max-width:900px;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(18px);
+  border-radius:40px;
+  padding:60px;
+  box-shadow:0 30px 60px rgba(0,0,0,0.25);
+  color:white;
+  text-align:center;
+}
+
+.about-glass h2{
+  font-size:42px;
+  margin-bottom:20px;
+}
+
+.about-glass .tagline{
+  font-size:18px;
+  opacity:0.9;
+  margin-bottom:45px;
+  line-height:1.6;
+}
+
+.about-points{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap:25px;
+}
+
+.point{
+  background: rgba(255,255,255,0.15);
+  padding:25px;
+  border-radius:25px;
+  display:flex;
+  align-items:flex-start;
+  gap:15px;
+  transition:0.3s;
+}
+
+.point:hover{
+  transform:translateY(-6px);
+  background: rgba(255,255,255,0.22);
+}
+
+.point span{
+  font-size:26px;
+}
+
+.point p{
+  font-size:15px;
+  line-height:1.5;
+  opacity:0.9;
+}
+
+/* CTA */
+.cta{
+  min-height:100vh;
+  padding:120px 8%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+
+.cta-glass{
+  max-width:700px;
+  background: rgba(255,255,255,0.14);
+  backdrop-filter: blur(20px);
+  border-radius:45px;
+  padding:70px 60px;
+  box-shadow:0 40px 80px rgba(0,0,0,0.3);
+  color:white;
+  position:relative;
+}
+
+/* subtle glow */
+.cta-glass::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  border-radius:45px;
+  background: linear-gradient(135deg,#ffb703,#00f5d4,#ff6ec7);
+  z-index:-1;
+  filter: blur(25px);
+  opacity:0.6;
+}
+
+.cta-glass h2{
+  font-size:46px;
+  margin-bottom:20px;
+}
+
+.cta-glass p{
+  font-size:18px;
+  opacity:0.9;
+  margin-bottom:40px;
+  line-height:1.6;
+}
+
+.cta-btn{
+  padding:18px 55px;
+  border:none;
+  border-radius:40px;
+  font-size:18px;
+  font-weight:500;
+  cursor:pointer;
+  background: linear-gradient(135deg,#ffb703,#ff7a18);
+  color:#000;
+  transition:0.3s;
+  box-shadow:0 15px 35px rgba(255,183,3,0.4);
+}
+
+.cta-btn:hover{
+  transform:translateY(-5px) scale(1.05);
+  box-shadow:0 25px 55px rgba(255,183,3,0.6);
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">🌍 WanderLust</div>
+  <ul>
+    <li><a href="#home">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#cta">Explore</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="home">
+  <div class="hero-text">
+    <h1>Discover Beautiful<br>Places Around the World</h1>
+    <p>
+      Experience unforgettable journeys, explore hidden gems,
+      and travel with complete freedom.
+    </p>
+    <button onclick="goExplore()">Start Exploring</button>
+  </div>
+
+  <div class="hero-img">
+    <img src="https://cdn-icons-png.flaticon.com/512/201/201623.png">
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="about">
+  <div class="about-glass">
+    <h2>Why WanderLust?</h2>
+    <p class="tagline">
+      WanderLust is more than a travel platform — it’s a seamless experience
+      designed for explorers who value simplicity, beauty, and adventure.
+    </p>
+
+    <div class="about-points">
+      <div class="point">
+        <span>✨</span>
+        <p>Experience-first journeys with meaningful destinations</p>
+      </div>
+      <div class="point">
+        <span>🎨</span>
+        <p>Modern transparent design with smooth scrolling navigation</p>
+      </div>
+      <div class="point">
+        <span>🧭</span>
+        <p>User-centric layout that makes planning effortless</p>
+      </div>
+      <div class="point">
+        <span>🌍</span>
+        <p>Scalable platform ready for real-world travel needs</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta" class="cta">
+  <div class="cta-glass">
+    <h2>Your Adventure Starts Here ✨</h2>
+    <p>
+      Step beyond the ordinary and explore destinations
+      that turn moments into memories.
+    </p>
+    <button class="cta-btn" onclick="goExplore()">
+      Explore Destinations →
+    </button>
+  </div>
+</section>
+
+<script>
+function goExplore(){
+  window.location.href="/listings";
+}
+</script>
+
+</body>
+</html>
