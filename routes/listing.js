@@ -6,7 +6,7 @@ const Listing = require("../models/listing");
 const {isLoggedIn,isOwner,validateListing}=require("../middleware.js");
 
 const listingController=require("../controllers/listings.js");
-const { index } = require('../controllers/listings.js');
+//const { index } = require('../controllers/listings.js');
 
 const multer  = require('multer');
 const {storage}=require("../cloudConfig.js");
@@ -24,6 +24,13 @@ router
 
   //new route
 router.get("/new", isLoggedIn,listingController.renderNewForm);
+
+// 🔍 SEARCH ROUTE (ADD HERE)
+router.get("/search", wrapAsync(listingController.searchListings));
+
+// 📌 MY LISTINGS (author only)
+router.get("/mine", isLoggedIn, wrapAsync(listingController.myListings));
+
 
 // Edit Route
 router.get("/:id/edit",isLoggedIn,isOwner,wrapAsync(listingController.editListing));

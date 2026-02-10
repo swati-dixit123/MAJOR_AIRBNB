@@ -1,5 +1,51 @@
 <style>
-  .search-btn {
+.chatbot-box {
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  width: 320px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+  z-index: 9999;
+}
+
+.chat-header {
+  background: #fe424d;
+  color: white;
+  padding: 10px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  border-radius: 12px 12px 0 0;
+}
+
+.chat-messages {
+  height: 220px;
+  overflow-y: auto;
+  padding: 10px;
+  font-size: 14px;
+}
+
+.chat-input {
+  display: flex;
+  border-top: 1px solid #ddd;
+}
+
+.chat-input input {
+  flex: 1;
+  border: none;
+  padding: 8px;
+  outline: none;
+}
+
+.chat-input button {
+  background: #fe424d;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+}
+.search-btn {
     background-color: #fe424d;
     color: #fff;
     border-radius: 25px;
@@ -10,11 +56,11 @@
     color: #fff;
   }
   .search-btn i {
-    margin-right: 1rem;
+    margin-right: 0.5rem;
   }
   .search-inp {
     border-radius: 25px;
-    padding: 0.5rem 3rem;
+    padding: 0.5rem 2rem;
     font-size: 1rem;
   }
 </style>
@@ -45,18 +91,21 @@
       <!-- RIGHT SIDE -->
       <div class="navbar-nav ms-auto align-items-center">
 
-        <!-- Search -->
-        <form class="d-flex me-3" role="search">
-          <input class="form-control me-2 search-inp"
-                 type="search"
-                 placeholder="Search destinations"
-                 aria-label="Search"/>
-          <button class="btn search-btn" type="submit">
-            <i class="fa-solid fa-magnifying-glass"></i>Search
-          </button>
-        </form>
-
-        <!-- Add listing -->
+       <!-- Search -->
+<form class="d-flex me-3" action="/listings/search" method="GET">
+  <input 
+    class="form-control me-2 search-inp"
+    type="search"
+    name="q"
+    placeholder="Search destinations"
+    aria-label="Search"
+    required
+  />
+  <button class="btn search-btn" type="submit">
+    <i class="fa-solid fa-magnifying-glass"></i> Search
+  </button>
+</form>
+ <!-- Add listing -->
         <a class="nav-link" href="/listings/new">Add new Listings</a>
 
         <% if (!currUser) { %>
@@ -65,10 +114,88 @@
         <% } %>
 
         <% if (currUser) { %>
+       <li class="nav-item">
+       <a class="nav-link" href="/wishlist">❤️ Wishlist</a>
+       </li>
+      <% } %>
+
+        <% if (currUser) { %>
+           <a class="nav-link" href="/listings/mine">📌 My Listings</a>
+        <% } %>
+
+
+      <% if (currUser) { %>
           <a class="nav-link" href="/logout"><b>Log out</b></a>
         <% } %>
+
+
 
       </div>
     </div>
   </div>
 </nav>
+<!-- Chatbot toggle button -->
+<button id="chatbot-toggle"
+  style="
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #fe424d;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 55px;
+    height: 55px;
+    font-size: 22px;
+    cursor: pointer;
+    z-index: 9999;
+  ">
+  💬
+</button>
+<div id="chatbot" class="chatbot-box d-none">
+  <div class="chat-header">
+    WanderLust Assistant ✈️
+    <span id="close-chat" style="cursor:pointer;">✖</span>
+  </div>
+
+  <div id="chat-messages" class="chat-messages"></div>
+
+  <div class="chat-input">
+    <input id="chat-input" type="text" placeholder="Ask about places, stays..." />
+    <button id="send-btn">Send</button>
+  </div>
+</div>
+
+<script>
+  const chatbot = document.getElementById("chatbot");
+  const toggleBtn = document.getElementById("chatbot-toggle");
+  const closeChat = document.getElementById("close-chat");
+  const sendBtn = document.getElementById("send-btn");
+  const input = document.getElementById("chat-input");
+  const messages = document.getElementById("chat-messages");
+
+  toggleBtn.onclick = () => chatbot.classList.toggle("d-none");
+  closeChat.onclick = () => chatbot.classList.add("d-none");
+
+  sendBtn.onclick = async () => {
+    const msg = input.value.trim();
+    if (!msg) return;
+
+    messages.innerHTML += `<p><b>You:</b> ${msg}</p>`;
+    input.value = "";
+
+    try {
+      const res = await fetch("/chatbot", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: msg })
+      });
+
+      const data = await res.json();
+      messages.innerHTML += `<p><b>Bot:</b> ${data.reply}</p>`;
+    } catch {
+      messages.innerHTML += `<p><b>Bot:</b> Something went wrong 😢</p>`;
+    }
+  };
+</script>
+

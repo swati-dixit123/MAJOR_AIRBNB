@@ -1,4 +1,5 @@
 const Listing=require("../models/listing");
+const User = require("../models/user");
 const axios = require('axios');
 
 module.exports.index = async(req, res) =>  {
@@ -12,57 +13,30 @@ module.exports.renderNewForm=(req, res) =>
 }
 
 module.exports.showListing = async (req, res) => {
-    const { id } = req.params;
-    const listing = await Listing.findById(id)
-        .populate({
-            path: "reviews",
-            populate: { path: "author" }
-        })
-        .populate("owner");
+  const { id } = req.params;
 
-    if (!listing) 
-    {
-        req.flash("error", "Listing you requested for does not exist");
-        return res.redirect("/listings");
-    }
+  const listing = await Listing.findById(id)
+    .populate({
+      path: "reviews",
+      populate: { path: "author" }
+    })
+    .populate("owner");
 
-    res.render("listings/show.ejs",{listing});
+  if (!listing) {
+    req.flash("error", "Listing you requested for does not exist");
+    return res.redirect("/listings");
+  }
 
-    // // Default coordinates (Delhi) in case geocoding fails
-    // let coords = { lat: 28.6139, lng: 77.2090 };
+  let currUserWithWishlist = null;
 
-    // try{
-    //     // Use both location and country for better accuracy
-    //     const geoRes = await axios.get('https://maps.googleapis.com/maps/api/geocode/json', 
-    //         {
-    //         params: 
-    //         {
-    //             address: `${listing.location}, ${listing.country}`,
-    //             key: process.env.GOOGLE_API_KEY
-    //         }
-    //     });
+  if (req.user) {
+    currUserWithWishlist = await User.findById(req.user._id);
+  }
 
-    //     if (geoRes.data.results.length > 0) 
-    //     {
-    //         coords = geoRes.data.results[0].geometry.location;
-    //     } 
-    //     else 
-    //     {
-    //         console.warn("Geocoding returned no results for:", listing.location, listing.country);
-    //     }
-    // } 
-    // catch (err) 
-    // {
-    //     console.error("Geocoding failed:", err);
-    // }
-
-    // // Render EJS with listing, Google API key, and coordinates
-    // res.render("listings/show.ejs", 
-    // { 
-    //     listing, 
-    //     googleKey: process.env.GOOGLE_API_KEY,
-    //     coords
-    // });
+  res.render("listings/show.ejs", {
+    listing,
+    currUser: currUserWithWishlist
+  });
 };
   module.exports.createListing=async (req, res) => {
       let url=req.file.path;
@@ -110,6 +84,43 @@ module.exports.updateListing = async (req, res) => {
   res.redirect(`/listings/${listing._id}`);
 };
 
+module.exports.searchListings = async (req, res) => {
+  const { q } = req.query;
+
+  if (!q) {
+    req.flash("error", "Please enter something to search");
+    return res.redirect("/listings");
+  }
+
+  const listings = await Listing.find({
+    $or: [
+      { title: { $regex: q, $options: "i" } },
+      { location: { $regex: q, $options: "i" } },
+      { country: { $regex: q, $options: "i" } }
+    ]
+  });
+
+  if (listings.length === 0) {
+    req.flash("error", "No listings found");
+    return res.redirect("/listings");
+  }
+
+  res.render("listings/index", {allListings: listings });
+};
+
+module.exports.myListings = async (req, res) => {
+  const listings = await Listing.find({ owner: req.user._id });
+
+  if (listings.length === 0) {
+    req.flash("error", "You have not added any listings yet");
+    return res.redirect("/listings");
+  }
+
+  res.render("listings/index", { allListings: listings });
+};
+
+
+
 module.exports.destroyListing = async(req, res) => 
  {
     const { id } = req.params;
@@ -118,3 +129,4 @@ module.exports.destroyListing = async(req, res) =>
     req.flash("success","Listing Deleted!")
     res.redirect("/listings");
  };
+

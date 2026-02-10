@@ -18,6 +18,19 @@
       <p class="card-text">  &#8377; <%=listing.price.toLocaleString("en-IN") %> </p>
       <p class="card-text"> <%= listing.location %> </p>
       <p class="card-text"> <%= listing.country %> </p>
+      <% if (currUser && !listing.owner._id.equals(currUser._id)) { %>
+  <form action="/wishlist/<%= listing._id %>" method="POST" class="mt-2">
+    <button class="btn 
+      <%= currUser.wishlist.includes(listing._id) 
+          ? 'btn-success' 
+          : 'btn-outline-danger' %>">
+      
+      <%= currUser.wishlist.includes(listing._id)
+          ? '✅ Added to Wishlist'
+          : '❤️ Add to Wishlist' %>
+    </button>
+  </form>
+<% } %>
     </div>
     </div>
     <br>

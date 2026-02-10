@@ -23,6 +23,9 @@ const User = require("./models/user.js");
 const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/reviews.js");
 const userRouter=require("./routes/user.js");
+const chatbotRoutes = require("./routes/chatbot");
+const wishlistRoutes = require("./routes/wishlist");
+
 
 //map
 
@@ -48,9 +51,11 @@ app.set("views", path.join(__dirname, "views"));
 
 
 // Middleware
+app.use(express.json());  
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "/public")));
+
 
 // const store=MongoStore.create({
 //      mongoUrl:dbUrl,
@@ -91,9 +96,9 @@ passport.deserializeUser(User.deserializeUser());
 
 // Flash middleware
 app.use((req, res, next) => {
+  res.locals.currUser = req.user; 
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
-  res.locals.currUser = req.user;
   next();
 });
 
@@ -111,6 +116,9 @@ app.use((req, res, next) => {
 // Routes
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
+app.use("/chatbot", chatbotRoutes);
+app.use("/wishlist", wishlistRoutes);
+
 app.use("/",userRouter);
 
 // Error handling
